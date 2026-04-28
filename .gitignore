@@ -1,0 +1,30 @@
+# Build artifacts
+*.exe
+*.test
+*.out
+
+# Coverage
+coverage.out
+coverage.html
+
+# Profiles
+*.prof
+*.pprof
+cpu.out
+mem.out
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Go
+vendor/
+
+# Fuzz corpus is committed; the cache directory is not.
+testdata/fuzz/*/
+!testdata/fuzz/*/seed

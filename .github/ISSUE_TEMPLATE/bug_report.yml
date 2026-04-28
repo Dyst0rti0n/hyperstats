@@ -1,0 +1,53 @@
+name: Bug report
+description: Report a defect, especially one that violates a documented bound.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! For sketch
+        libraries, the most useful bug reports are those where the
+        documented error bound is violated for some workload. If
+        possible, include a property test or reproducer.
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: What did you observe? What did you expect?
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Affected sketch
+      description: hll, cms, kll, tdigest, hash, or other?
+      placeholder: hll
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Sketch parameters
+      placeholder: precision=14, k=200, etc.
+
+  - type: textarea
+    attributes:
+      label: Reproducer
+      description: Minimal Go code that demonstrates the issue.
+      render: go
+
+  - type: input
+    attributes:
+      label: Go version
+      placeholder: "go1.23.0"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: hyperstats version / commit
+
+  - type: input
+    attributes:
+      label: OS / arch
+      placeholder: "linux/amd64"

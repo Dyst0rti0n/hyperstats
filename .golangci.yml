@@ -1,0 +1,70 @@
+# golangci-lint configuration for hyperstats.
+# https://golangci-lint.run/usage/configuration/
+#
+# Philosophy: enable the high-signal linters; disable only those that
+# generate noise on idiomatic Go for sketch / numerical code.
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck       # forbids ignoring returned errors
+    - gosimple       # simplifications
+    - govet          # standard vet checks
+    - ineffassign    # unused assignments
+    - staticcheck    # comprehensive static analysis (SA*)
+    - typecheck      # type errors caught at lint time
+    - unused         # unused symbols
+    - gofmt          # formatting
+    - goimports      # import ordering
+    - misspell       # spelling in comments
+    - unconvert      # unnecessary type conversions
+    - prealloc       # slice prealloc opportunities
+    - bodyclose      # http body close (defensive)
+    - errorlint      # errors.Is / %w usage
+    - gocritic       # broad set of opinionated checks
+    - revive         # configurable replacement for golint
+
+linters-settings:
+  errcheck:
+    # Allow _ = expr.Close() patterns; flag everything else.
+    check-blank: false
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment  # we prefer logical field order over packed
+  revive:
+    rules:
+      - name: var-naming
+      - name: package-comments
+      - name: exported
+      - name: blank-imports
+      - name: range-val-in-closure
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+      - style
+    disabled-checks:
+      - whyNoLint     # we don't use //nolint pragmas
+      - hugeParam     # we pass small structs intentionally
+      - rangeValCopy  # idiomatic Go
+
+issues:
+  exclude-rules:
+    # Test files don't need exported-doc on every helper.
+    - path: _test\.go
+      linters:
+        - revive
+        - gocritic
+    # Property tests are intentionally heavy on math; allow long funcs.
+    - path: _property_test\.go
+      linters:
+        - gocritic
+        - prealloc
+  max-issues-per-linter: 0
+  max-same-issues: 0

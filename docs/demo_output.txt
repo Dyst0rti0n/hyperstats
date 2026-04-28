@@ -1,0 +1,78 @@
+$ go run ./cmd/hyperdemo
+
+═══ Environment ═══
+  Go:       go1.22.2
+  GOARCH:   amd64
+  GOOS:     linux
+  CPUs:     2
+
+═══ Demo 1 — HyperLogLog: cardinality vs precision ═══
+  p    memory    theo σ        empirical RMSE
+  ----------------------------------------------
+  8    256 B     6.5000%       6.4242%
+  10   1.0 KiB   3.2500%       3.4107%
+  12   4.0 KiB   1.6250%       1.5591%
+  14   16.0 KiB  0.8125%       0.7651%
+  16   64.0 KiB  0.4062%       0.2874%
+
+═══ Demo 2 — HyperLogLog: error vs cardinality at p=14 ═══
+  Fixed precision p=14, theoretical σ=0.0081
+  n             RMSE          ratio to σ
+  ----------------------------------------
+  100           0.5916%       0.73
+  300           0.4346%       0.53
+  1000          0.4433%       0.55
+  3000          0.5661%       0.70
+  10000         0.5036%       0.62
+  30000         0.7635%       0.94
+  100000        0.7206%       0.89
+  300000        0.7324%       0.90
+  1000000       0.6889%       0.85
+
+═══ Demo 3 — Count-Min Sketch: heavy-hitter fidelity ═══
+  ε=0.001 δ=0.01 → w=2719, d=5
+  N=1000000, εN bound=1000 (max overestimate w.p. ≥ 0.99)
+
+  key                   true      estimate     abs err       rel err
+  --------------------------------------------------------
+  hot-0                24856         24937          81       0.00326
+  hot-1                24984         25147         163       0.00652
+  hot-2                25236         25363         127       0.00503
+  hot-3                25044         25186         142       0.00567
+  hot-4                25005         25137         132       0.00528
+  ... (15 more hot keys)
+  tail-0                   8           129         121      15.12500
+  tail-100                11           142         131      11.90909
+  tail-1000                8           209         201      25.12500
+  tail-10000               9           145         136      15.11111
+
+═══ Demo 4 — KLL vs t-digest: rank error across quantiles ═══
+  k=200 (KLL), δ=100 (t-digest), n=1000000 log-normal samples
+  KLL memory:      38400 bytes
+  t-digest memory: 13568 bytes (61 centroids)
+
+  q         true         KLL          KLL Δrank t-digest     TD Δrank
+  --------------------------------------------------------
+  p50.0000  54.52         54.40         0.00395    54.55         0.00037
+  p75.0000  81.63         80.59         0.00445    81.67         0.00025
+  p90.0000  117.39        114.09        0.00613    117.58        0.00050
+  p95.0000  146.12        140.88        0.00420    146.56        0.00049
+  p99.0000  219.93        202.60        0.00688    220.71        0.00019
+  p99.5000  256.09        211.90        0.00393    258.97        0.00021
+  p99.9000  347.27        329.49        0.00099    355.84        0.00006
+  p99.9900  515.07        329.49        0.00009    979.37        0.00010
+
+═══ Demo 5 — Throughput ═══
+  HyperLogLog         p=14                74.2 ns/op   13.48 Mops/s
+  Count-Min           ε=0.1%,δ=1%         87.1 ns/op   11.49 Mops/s
+  KLL                 k=200              373.2 ns/op    2.68 Mops/s
+  t-digest            δ=100               55.5 ns/op   18.02 Mops/s
+
+═══ Demo 6 — Mergeability ═══
+  8 shards × 25000 uniques each = 200000 total
+  Sequential HLL:    200274  (rel err +0.137%)
+  Sharded + merged:  200274  (rel err +0.137%)
+  Serialised:        16388 bytes
+  After round-trip:  200274  (Δ from pre-round-trip: 0)
+
+DONE.  CSVs written to docs/data/

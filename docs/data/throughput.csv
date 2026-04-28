@@ -1,0 +1,5 @@
+sketch,config,ns_per_op,mops_per_sec
+HyperLogLog,p=14,74.21,13.48
+Count-Min,"ε=0.1%,δ=1%",87.06,11.49
+KLL,k=200,373.16,2.68
+t-digest,δ=100,55.49,18.02
