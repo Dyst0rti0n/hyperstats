@@ -121,33 +121,33 @@ func (s *Sketch) AddString(x string, v uint64) {
 // over-estimate is at most ε·TotalMass().
 func (s *Sketch) Count(x []byte) uint64 {
 	h1, h2 := s.hashes(x)
-	min := uint64(math.MaxUint64)
+	minimum := uint64(math.MaxUint64)
 	for i := uint32(0); i < s.d; i++ {
 		col := uint32((h1 + uint64(i)*h2) % uint64(s.w))
-		if c := s.counts[i*s.w+col]; c < min {
-			min = c
+		if c := s.counts[i*s.w+col]; c < minimum {
+			minimum = c
 		}
 	}
-	if min == math.MaxUint64 {
+	if minimum == math.MaxUint64 {
 		return 0 // d=0 would be invalid but be defensive
 	}
-	return min
+	return minimum
 }
 
 // CountString is the string-keyed convenience form of Count.
 func (s *Sketch) CountString(x string) uint64 {
 	h1, h2 := hash.SumString(x, hashSeed)
-	min := uint64(math.MaxUint64)
+	minimum := uint64(math.MaxUint64)
 	for i := uint32(0); i < s.d; i++ {
 		col := uint32((h1 + uint64(i)*h2) % uint64(s.w))
-		if c := s.counts[i*s.w+col]; c < min {
-			min = c
+		if c := s.counts[i*s.w+col]; c < minimum {
+			minimum = c
 		}
 	}
-	if min == math.MaxUint64 {
+	if minimum == math.MaxUint64 {
 		return 0
 	}
-	return min
+	return minimum
 }
 
 // Merge folds o into s in place: cell-wise addition. Both sketches must
@@ -208,10 +208,9 @@ func (s *Sketch) MemoryBytes() int { return len(s.counts) * 8 }
 //	[12..20] total mass (uint64)
 //	[20..]  width*depth uint64 counters
 
-const (
-	formatVersion byte = 1
-	headerLen          = 20
-)
+const formatVersion byte = 1
+
+const headerLen = 20
 
 var magic = [...]byte{'C', 'M', 'S'}
 

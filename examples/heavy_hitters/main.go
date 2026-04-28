@@ -83,8 +83,8 @@ func main() {
 	tracker := newTopK(10)
 
 	const totalEvents = 1_000_000
-	const popular = 20    // number of "popular" keys
-	const tail = 100_000  // number of "tail" keys
+	const popular = 20   // number of "popular" keys
+	const tail = 100_000 // number of "tail" keys
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	fmt.Printf("Simulating %d events: %d popular keys, %d tail keys...\n",

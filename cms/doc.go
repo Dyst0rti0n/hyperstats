@@ -36,13 +36,13 @@
 // In words: with probability at least 1 - δ, the over-estimate is at most
 // ε × (total stream mass). A few worked examples for guidance:
 //
-//	  ε      δ      width w   depth d   memory @ uint64
-//	  ----   -----  --------  --------  ----------------
-//	  10%    1%     28        5         1.1 KiB
-//	  1%     1%     272       5         10.6 KiB
-//	  0.1%   1%     2719      5         106 KiB
-//	  0.1%   0.01%  2719      10        212 KiB
-//	  0.01%  0.001% 27183     14        2.96 MiB
+//	ε      δ      width w   depth d   memory @ uint64
+//	----   -----  --------  --------  ----------------
+//	10%    1%     28        5         1.1 KiB
+//	1%     1%     272       5         10.6 KiB
+//	0.1%   1%     2719      5         106 KiB
+//	0.1%   0.01%  2719      10        212 KiB
+//	0.01%  0.001% 27183     14        2.96 MiB
 //
 // The bound is tight only when the stream is well-mixed across keys. With
 // extreme skew (one key dominates), the absolute error εN can swamp the

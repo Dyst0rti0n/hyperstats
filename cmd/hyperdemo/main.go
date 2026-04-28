@@ -83,7 +83,7 @@ func demoHLLAccuracy(outDir string, scale float64) {
 		TheoreticalSE float64
 		EmpiricalRMSE float64
 	}
-	var rows []row
+	rows := make([]row, 0, len(precisions))
 
 	fmt.Printf("  %-3s  %-8s  %-12s  %-12s\n", "p", "memory", "theo σ", "empirical RMSE")
 	fmt.Printf("  %s\n", "----------------------------------------------")
@@ -112,15 +112,18 @@ func demoHLLAccuracy(outDir string, scale float64) {
 
 	writeCSV(filepath.Join(outDir, "hll_accuracy.csv"),
 		[]string{"precision", "memory_bytes", "theoretical_sigma", "empirical_rmse"},
-		func(w *csv.Writer) {
+		func(w *csv.Writer) error {
 			for _, r := range rows {
-				w.Write([]string{
+				if err := w.Write([]string{
 					strconv.Itoa(int(r.Precision)),
 					strconv.Itoa(r.Memory),
 					strconv.FormatFloat(r.TheoreticalSE, 'f', 6, 64),
 					strconv.FormatFloat(r.EmpiricalRMSE, 'f', 6, 64),
-				})
+				}); err != nil {
+					return err
+				}
 			}
+			return nil
 		})
 }
 
@@ -139,7 +142,7 @@ func demoHLLErrorVsN(outDir string, scale float64) {
 		EmpiricalRMSE float64
 		TheoreticalSE float64
 	}
-	var rows []row
+	rows := make([]row, 0, len(cardinalities))
 
 	theoSE := 1.04 / math.Sqrt(float64(uint32(1)<<p))
 	fmt.Printf("  Fixed precision p=%d, theoretical σ=%.4f\n", p, theoSE)
@@ -169,14 +172,17 @@ func demoHLLErrorVsN(outDir string, scale float64) {
 
 	writeCSV(filepath.Join(outDir, "hll_error_vs_n.csv"),
 		[]string{"n", "empirical_rmse", "theoretical_sigma"},
-		func(w *csv.Writer) {
+		func(w *csv.Writer) error {
 			for _, r := range rows {
-				w.Write([]string{
+				if err := w.Write([]string{
 					strconv.Itoa(r.N),
 					strconv.FormatFloat(r.EmpiricalRMSE, 'f', 6, 64),
 					strconv.FormatFloat(r.TheoreticalSE, 'f', 6, 64),
-				})
+				}); err != nil {
+					return err
+				}
 			}
+			return nil
 		})
 }
 
@@ -213,14 +219,14 @@ func demoCMS(outDir string, scale float64) {
 	fmt.Printf("  --------------------------------------------------------\n")
 
 	type row struct {
-		Key       string
-		True      uint64
-		Estimate  uint64
-		AbsErr    int64
-		RelErr    float64
-		IsHot     bool
+		Key      string
+		True     uint64
+		Estimate uint64
+		AbsErr   int64
+		RelErr   float64
+		IsHot    bool
 	}
-	var rows []row
+	rows := make([]row, 0, popular+4)
 
 	// Heavy hitters.
 	for i := 0; i < popular; i++ {
@@ -253,17 +259,20 @@ func demoCMS(outDir string, scale float64) {
 
 	writeCSV(filepath.Join(outDir, "cms_heavy_hitters.csv"),
 		[]string{"key", "true_count", "cms_estimate", "abs_error", "rel_error", "is_hot"},
-		func(w *csv.Writer) {
+		func(w *csv.Writer) error {
 			for _, r := range rows {
-				w.Write([]string{
+				if err := w.Write([]string{
 					r.Key,
 					strconv.FormatUint(r.True, 10),
 					strconv.FormatUint(r.Estimate, 10),
 					strconv.FormatInt(r.AbsErr, 10),
 					strconv.FormatFloat(r.RelErr, 'f', 6, 64),
 					strconv.FormatBool(r.IsHot),
-				})
+				}); err != nil {
+					return err
+				}
 			}
+			return nil
 		})
 }
 
@@ -297,14 +306,14 @@ func demoQuantileComparison(outDir string, scale float64) {
 	fmt.Printf("  --------------------------------------------------------\n")
 
 	type row struct {
-		Q              float64
-		True           float64
-		KLLValue       float64
-		KLLRankErr     float64
-		TDValue        float64
-		TDRankErr      float64
+		Q          float64
+		True       float64
+		KLLValue   float64
+		KLLRankErr float64
+		TDValue    float64
+		TDRankErr  float64
 	}
-	var rows []row
+	rows := make([]row, 0, len(probes))
 
 	for _, q := range probes {
 		idx := int(math.Floor(q * float64(n)))
@@ -329,17 +338,20 @@ func demoQuantileComparison(outDir string, scale float64) {
 
 	writeCSV(filepath.Join(outDir, "quantile_comparison.csv"),
 		[]string{"quantile", "true_value", "kll_value", "kll_rank_err", "tdigest_value", "tdigest_rank_err"},
-		func(w *csv.Writer) {
+		func(w *csv.Writer) error {
 			for _, r := range rows {
-				w.Write([]string{
+				if err := w.Write([]string{
 					strconv.FormatFloat(r.Q, 'f', 6, 64),
 					strconv.FormatFloat(r.True, 'f', 6, 64),
 					strconv.FormatFloat(r.KLLValue, 'f', 6, 64),
 					strconv.FormatFloat(r.KLLRankErr, 'f', 6, 64),
 					strconv.FormatFloat(r.TDValue, 'f', 6, 64),
 					strconv.FormatFloat(r.TDRankErr, 'f', 6, 64),
-				})
+				}); err != nil {
+					return err
+				}
 			}
+			return nil
 		})
 }
 
@@ -349,12 +361,12 @@ func demoThroughput(outDir string) {
 	const n = 1_000_000
 
 	type row struct {
-		Sketch string
-		Config string
-		NsPerOp float64
+		Sketch     string
+		Config     string
+		NsPerOp    float64
 		MOpsPerSec float64
 	}
-	var rows []row
+	rows := make([]row, 0, 4)
 
 	measure := func(name, cfg string, fn func(int)) {
 		// Warm-up.
@@ -379,7 +391,7 @@ func demoThroughput(outDir string) {
 	cmsSk := cms.NewWithGuarantees(0.001, 0.01)
 	measure("Count-Min", "ε=0.1%,δ=1%", func(count int) {
 		for i := 0; i < count; i++ {
-			cmsSk.AddString("k-" + strconv.Itoa(i), 1)
+			cmsSk.AddString("k-"+strconv.Itoa(i), 1)
 		}
 	})
 
@@ -399,14 +411,17 @@ func demoThroughput(outDir string) {
 
 	writeCSV(filepath.Join(outDir, "throughput.csv"),
 		[]string{"sketch", "config", "ns_per_op", "mops_per_sec"},
-		func(w *csv.Writer) {
+		func(w *csv.Writer) error {
 			for _, r := range rows {
-				w.Write([]string{
+				if err := w.Write([]string{
 					r.Sketch, r.Config,
 					strconv.FormatFloat(r.NsPerOp, 'f', 2, 64),
 					strconv.FormatFloat(r.MOpsPerSec, 'f', 2, 64),
-				})
+				}); err != nil {
+					return err
+				}
 			}
+			return nil
 		})
 }
 
@@ -465,18 +480,25 @@ func humanBytes(b int) string {
 	}
 }
 
-func writeCSV(path string, header []string, fill func(*csv.Writer)) {
+func writeCSV(path string, header []string, fill func(*csv.Writer) error) {
 	f, err := os.Create(path)
 	if err != nil {
 		fatal("create %s: %v", path, err)
 	}
-	defer f.Close()
 	w := csv.NewWriter(f)
-	defer w.Flush()
 	if err := w.Write(header); err != nil {
 		fatal("write header: %v", err)
 	}
-	fill(w)
+	if err := fill(w); err != nil {
+		fatal("write %s: %v", path, err)
+	}
+	w.Flush()
+	if err := w.Error(); err != nil {
+		fatal("flush %s: %v", path, err)
+	}
+	if err := f.Close(); err != nil {
+		fatal("close %s: %v", path, err)
+	}
 }
 
 func fatal(format string, args ...interface{}) {

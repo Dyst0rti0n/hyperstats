@@ -28,8 +28,8 @@ func main() {
 		return math.Exp(rng.NormFloat64()*0.6 + 4.0)
 	}
 
-	kllSketch := kll.New(200)         // ε_q ≈ 0.83% per query
-	tdSketch := tdigest.New(100)      // ε_p99 ≈ 0.05% empirically
+	kllSketch := kll.New(200)    // ε_q ≈ 0.83% per query
+	tdSketch := tdigest.New(100) // ε_p99 ≈ 0.05% empirically
 	allValues := make([]float64, N)
 
 	fmt.Printf("Simulating %d log-normal latency observations...\n", N)

@@ -104,11 +104,11 @@ func (s *Sketch) numLevels() int { return len(s.levels) }
 func (s *Sketch) capacity(h int) int {
 	H := s.numLevels() - 1
 	c := math.Pow(shrinkFactor, float64(H-h))
-	cap_ := int(math.Ceil(float64(s.k) * c))
-	if cap_ < 2 {
-		cap_ = 2
+	capacity := int(math.Ceil(float64(s.k) * c))
+	if capacity < 2 {
+		capacity = 2
 	}
-	return cap_
+	return capacity
 }
 
 // Add incorporates a single observation x into the sketch.
@@ -148,10 +148,10 @@ func (s *Sketch) compactIfFull() {
 }
 
 // compactLevel performs one compaction step at level h:
-//   1. Sort levels[h] (idempotent if already sorted).
-//   2. Flip a fair coin to decide odd vs. even retention.
-//   3. Promote the kept items to level h+1 (creating it if needed).
-//   4. Clear levels[h].
+//  1. Sort levels[h] (idempotent if already sorted).
+//  2. Flip a fair coin to decide odd vs. even retention.
+//  3. Promote the kept items to level h+1 (creating it if needed).
+//  4. Clear levels[h].
 //
 // Items at level h have weight 2^h; after compaction the kept items
 // represent the same total weight at level h+1 (since each item now has
@@ -442,10 +442,9 @@ func (s *Sketch) Clone() *Sketch {
 //	   [..4]  len (uint32)
 //	   [..]   len * float64
 
-const (
-	formatVersion byte = 1
-	headerLen          = 36
-)
+const formatVersion byte = 1
+
+const headerLen = 36
 
 var magic = [...]byte{'K', 'L', 'L'}
 

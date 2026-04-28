@@ -38,14 +38,14 @@
 // This implies the following 95%-confidence (≈ 2σ) relative error bounds
 // for common precisions:
 //
-//	  p   m=2^p   memory     std err   95% relative err   typical use
-//	  --  ------  ---------  --------  ----------------   --------------
-//	   8     256    256 B     6.50%       ~13%            tiny demos
-//	  10    1024     1 KiB    3.25%       ~6.5%           coarse approx.
-//	  12    4096     4 KiB    1.62%       ~3.2%           dashboards
-//	  14   16384    16 KiB    0.81%       ~1.6%           default
-//	  16   65536    64 KiB    0.41%       ~0.8%           high accuracy
-//	  18  262144   256 KiB    0.20%       ~0.4%           audit-grade
+//	p   m=2^p   memory     std err   95% relative err   typical use
+//	--  ------  ---------  --------  ----------------   --------------
+//	 8     256    256 B     6.50%       ~13%            tiny demos
+//	10    1024     1 KiB    3.25%       ~6.5%           coarse approx.
+//	12    4096     4 KiB    1.62%       ~3.2%           dashboards
+//	14   16384    16 KiB    0.81%       ~1.6%           default
+//	16   65536    64 KiB    0.41%       ~0.8%           high accuracy
+//	18  262144   256 KiB    0.20%       ~0.4%           audit-grade
 //
 // These bounds are large-cardinality asymptotics. For small n (linear-
 // counting regime), the estimator switches to V * ln(m/V), which has its

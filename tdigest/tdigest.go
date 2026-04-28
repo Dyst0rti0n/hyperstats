@@ -368,10 +368,11 @@ func (s *Sketch) Clone() *Sketch {
 //	[36..40] centroid count (uint32)
 //	[40..]   count × (mean float64, weight float64)
 
+const formatVersion byte = 1
+
 const (
-	formatVersion byte = 1
-	headerLen          = 40
-	centroidLen        = 16
+	headerLen   = 40
+	centroidLen = 16
 )
 
 var magic = [...]byte{'T', 'D', 'G'}

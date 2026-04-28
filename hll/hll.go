@@ -70,8 +70,8 @@ func (s *Sketch) m() uint32 { return 1 << s.p }
 // hash. The hash MUST have good avalanche; weak hashes (FNV, FxHash) bias
 // the register distribution and break the σ bound.
 func (s *Sketch) AddHash(h uint64) {
-	idx := uint32(h >> (64 - s.p))                                 // top p bits → register index
-	rho := uint8(bits.LeadingZeros64((h<<s.p)|(1<<(s.p-1)))) + 1   // ρ on remaining bits
+	idx := uint32(h >> (64 - s.p))                               // top p bits → register index
+	rho := uint8(bits.LeadingZeros64((h<<s.p)|(1<<(s.p-1)))) + 1 // ρ on remaining bits
 	s.update(idx, rho)
 }
 
@@ -279,12 +279,15 @@ func (s *Sketch) Clone() *Sketch {
 // Magic and version let future formats be added without breaking readers.
 
 const (
-	magic         byte = 'H'
-	version       byte = 1
-	modeSparse    byte = 0
-	modeDense     byte = 1
-	headerLen          = 4
-	sparseEntryLen     = 5 // uint32 idx + uint8 rho
+	magic      byte = 'H'
+	version    byte = 1
+	modeSparse byte = 0
+	modeDense  byte = 1
+)
+
+const (
+	headerLen      = 4
+	sparseEntryLen = 5 // uint32 idx + uint8 rho
 )
 
 // MarshalBinary serialises the sketch.
@@ -340,7 +343,7 @@ func (s *Sketch) UnmarshalBinary(data []byte) error {
 	s.sparse = nil
 	s.dense = nil
 	m := uint32(1) << p
-	maxRho := uint8(64 - p + 1)
+	maxRho := 64 - p + 1
 
 	switch mode {
 	case modeDense:
