@@ -19,7 +19,7 @@ and the standards.
 
 ```bash
 # Clone and build
-git clone https://github.com/dystortion/hyperstats
+git clone https://github.com/Dyst0rti0n/hyperstats
 cd hyperstats
 go build ./...
 

@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dystortion/hyperstats/cms"
+	"github.com/Dyst0rti0n/hyperstats/cms"
 )
 
 // topK keeps the k items with highest frequency seen so far.

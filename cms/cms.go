@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/dystortion/hyperstats/hash"
+	"github.com/Dyst0rti0n/hyperstats/hash"
 )
 
 // Sketch is a Count-Min Sketch with width w and depth d.

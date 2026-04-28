@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dystortion/hyperstats/hll"
+	"github.com/Dyst0rti0n/hyperstats/hll"
 )
 
 func main() {

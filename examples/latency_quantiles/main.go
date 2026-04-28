@@ -13,8 +13,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/dystortion/hyperstats/kll"
-	"github.com/dystortion/hyperstats/tdigest"
+	"github.com/Dyst0rti0n/hyperstats/kll"
+	"github.com/Dyst0rti0n/hyperstats/tdigest"
 )
 
 func main() {

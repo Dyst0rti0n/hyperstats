@@ -7,7 +7,7 @@ import (
 	"math"
 	"math/bits"
 
-	"github.com/dystortion/hyperstats/hash"
+	"github.com/Dyst0rti0n/hyperstats/hash"
 )
 
 // Sketch is a HyperLogLog cardinality estimator.

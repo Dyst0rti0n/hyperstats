@@ -5,11 +5,11 @@
 // hyperstats itself is a meta-package — each algorithm lives in its own
 // sub-package and can be imported independently:
 //
-//	import "github.com/dystortion/hyperstats/hll"      // HyperLogLog
-//	import "github.com/dystortion/hyperstats/cms"      // Count-Min Sketch
-//	import "github.com/dystortion/hyperstats/kll"      // KLL quantile sketch
-//	import "github.com/dystortion/hyperstats/tdigest"  // merging t-digest
-//	import "github.com/dystortion/hyperstats/hash"     // MurmurHash3 (used by hll, cms)
+//	import "github.com/Dyst0rti0n/hyperstats/hll"      // HyperLogLog
+//	import "github.com/Dyst0rti0n/hyperstats/cms"      // Count-Min Sketch
+//	import "github.com/Dyst0rti0n/hyperstats/kll"      // KLL quantile sketch
+//	import "github.com/Dyst0rti0n/hyperstats/tdigest"  // merging t-digest
+//	import "github.com/Dyst0rti0n/hyperstats/hash"     // MurmurHash3 (used by hll, cms)
 //
 // # Choosing a sketch
 //

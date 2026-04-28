@@ -24,10 +24,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dystortion/hyperstats/cms"
-	"github.com/dystortion/hyperstats/hll"
-	"github.com/dystortion/hyperstats/kll"
-	"github.com/dystortion/hyperstats/tdigest"
+	"github.com/Dyst0rti0n/hyperstats/cms"
+	"github.com/Dyst0rti0n/hyperstats/hll"
+	"github.com/Dyst0rti0n/hyperstats/kll"
+	"github.com/Dyst0rti0n/hyperstats/tdigest"
 )
 
 func main() {
