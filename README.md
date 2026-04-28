@@ -4,10 +4,10 @@
 
 **Production-grade streaming sketch algorithms for Go, with mathematically rigorous error bounds and empirical verification.**
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/dystortion/hyperstats.svg)](https://pkg.go.dev/github.com/dystortion/hyperstats)
-[![Go Report Card](https://goreportcard.com/badge/github.com/dystortion/hyperstats)](https://goreportcard.com/report/github.com/dystortion/hyperstats)
-[![CI](https://github.com/dystortion/hyperstats/actions/workflows/ci.yml/badge.svg)](https://github.com/dystortion/hyperstats/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/dystortion/hyperstats/actions/workflows/codeql.yml/badge.svg)](https://github.com/dystortion/hyperstats/actions/workflows/codeql.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/dyst0rti0n/hyperstats.svg)](https://pkg.go.dev/github.com/dyst0rti0n/hyperstats)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dyst0rti0n/hyperstats)](https://goreportcard.com/report/github.com/dyst0rti0n/hyperstats)
+[![CI](https://github.com/dyst0rti0n/hyperstats/actions/workflows/ci.yml/badge.svg)](https://github.com/dyst0rti0n/hyperstats/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/dyst0rti0n/hyperstats/actions/workflows/codeql.yml/badge.svg)](https://github.com/dyst0rti0n/hyperstats/actions/workflows/codeql.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8.svg)](https://go.dev/)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen.svg)](#testing-strategy)
@@ -29,11 +29,11 @@ Use `hyperstats` when your app is receiving millions of events and you need fast
 In short: `hyperstats` gives you tiny summaries of huge streams, with clear error bounds.
 
 ```bash
-go get github.com/dystortion/hyperstats
+go get github.com/dyst0rti0n/hyperstats
 ```
 
 ```go
-import "github.com/dystortion/hyperstats/hll"
+import "github.com/dyst0rti0n/hyperstats/hll"
 
 sketch := hll.New(hll.DefaultPrecision) // ~16 KiB, ~0.81% standard error
 for _, userID := range stream {
@@ -76,7 +76,7 @@ Streaming sketches are useful only when their failure modes are explicit. `hyper
 ## Install
 
 ```bash
-go get github.com/dystortion/hyperstats
+go get github.com/dyst0rti0n/hyperstats
 ```
 
 The module targets Go 1.22+ and exposes each algorithm as an independent sub-package.
@@ -89,7 +89,7 @@ package main
 import (
     "fmt"
 
-    "github.com/dystortion/hyperstats/hll"
+    "github.com/dyst0rti0n/hyperstats/hll"
 )
 
 func main() {
@@ -211,7 +211,7 @@ Each sketch occupies a different region of the memory-vs-error trade-off. **Pick
 > *"How many distinct items have I seen in this stream?"*
 
 ```go
-import "github.com/dystortion/hyperstats/hll"
+import "github.com/dyst0rti0n/hyperstats/hll"
 
 s := hll.New(hll.DefaultPrecision)  // p=14, ~16 KiB, ~0.81% std err
 for _, userID := range eventStream {
@@ -250,7 +250,7 @@ The σ bound is asymptotic. For `n` close to or below the register count `m`, HL
 > *"How many times has each key appeared?"*
 
 ```go
-import "github.com/dystortion/hyperstats/cms"
+import "github.com/dyst0rti0n/hyperstats/cms"
 
 // "Tell me each key's frequency to within 0.1% of total volume,
 //  with probability ≥ 99%."
@@ -288,7 +288,7 @@ Internally the sketch uses Kirsch-Mitzenmacher double hashing (`h_i(x) = h₁ + 
 > *"What's the p99? With a worst-case rank-error guarantee?"*
 
 ```go
-import "github.com/dystortion/hyperstats/kll"
+import "github.com/dyst0rti0n/hyperstats/kll"
 
 s := kll.New(200)              // k=200 → ε_q ≈ 0.83% per quantile query
 for _, latency := range latencies {
@@ -314,7 +314,7 @@ KLL's edge over t-digest is **exact mergeability**: a sketch built from sharded 
 > *"What's the p99? With the tightest possible tail accuracy?"*
 
 ```go
-import "github.com/dystortion/hyperstats/tdigest"
+import "github.com/dyst0rti0n/hyperstats/tdigest"
 
 s := tdigest.New(100)          // δ=100, ~10 KiB, ~0.05% rank error at p99
 for _, latency := range latencies {
@@ -514,25 +514,25 @@ On Windows, the race detector requires a C toolchain on `PATH` because Go's race
 
 The full plan with acceptance criteria for each milestone is in [`ROADMAP.md`](ROADMAP.md). Highlights:
 
-### v0.2 — accuracy round (~6 weeks)
+### v0.2 — accuracy round
 
 - **HLL++ empirical bias-correction tables** to close the +1.5% transition-regime bias bump (already pinned by a regression test).
 - **Conservative Update CMS** as a separate non-mergeable type, typically 30–50% lower empirical error on skewed streams.
 - **Weighted t-digest fast path** for sparse-but-heavy streams.
 
-### v0.3 — new sketches (~3 months)
+### v0.3 — new sketches
 
 - **Bloom filter** as the natural "have I seen this?" companion to CMS.
 - **HLL set operations** (union, intersection-via-IE, Jaccard).
 - **KMV (k-Minimum-Values)** sketch for cardinality with exact set algebra.
 
-### v0.4 — performance round (~5 months)
+### v0.4 — performance round
 
 - **AVX2-accelerated MurmurHash3** for inputs ≥ 1 KiB (~3× speedup expected).
 - **Pool-based zero-allocation hot paths** — every `Add*` benchmark target 0 B/op.
 - **`hyperstats/concurrent` package** with thread-safe sharded wrappers.
 
-### v1.0 — API stability (~9 months)
+### v1.0 — API stability
 
 API freeze, comprehensive doc audit, ≥1 hour of fuzz time per format, semver from there.
 
